@@ -54,3 +54,29 @@ print(inputs)
 - input_ids : 每個元素是一個整數，代表對應詞彙的 ID。兩個句子都轉換成了一個整數序列。這些 ID 是基於預訓練模型的詞彙表所生成的。
 - token_type_ids : 它表示每個 token 屬於哪個句子。在這個例子中，所有的 token 都被標記為 0，表示它們屬於同一句子。這在處理具有多個句子的輸入時很有用，可以區分不同句子的 token `(可以提前設好 token_type_ids 加入到參數當中)`。
 - attention_mask : 它表示模型在處理輸入時應該關注哪些部分。1 表示模型應該關注該位置的 token，0 表示模型應該忽略該位置的 token。注意力遮罩通常用於處理填充的部分，以確保模型不會關注填充 token`(=不要理會那些多餘的填充)`。
+
+### 載入和保存
+
+剛剛我們有使用到了載入這個方法 from_pretrained()，現在我們要來說保存 save_pretrained() 函数用於保存已經訓練或微調過的模型、tokenizer 和配置文件，以便以後再次使用。
+```python
+# 指定要保存的目錄路徑
+save_directory = "my_fine_tuned_model"
+
+# 使用 save_pretrained() 函數保存模型、分詞器和配置文件
+tokenizer.save_pretrained(save_directory)
+```
+保存完成後，你將在指定目錄下看到分詞器文件，當然這個方法也可以使用在保存模型
+
+這邊要順編補充一個就是我們除了可以使用 AutoTokenizer 這個類別之外，我們也可使用 BertTokenizer
+```python
+from transformers import AutoTokenizer
+
+# 換成
+from transformers import BertTokenizer
+```
+- AutoTokenizer 是通過模型的名稱或 checkpoint 路徑來自動選擇適當的 tokenizer。這使得它非常方便，因為你只需提供模型的名稱或路徑，而不必明確指定 tokenizer 的類型。
+- BertTokenizer 則是一個專門用於 BERT 相關模型的 tokenizer。你需要明確知道你要使用的是哪種模型，然後實例化相應的 tokenizer
+但是兩者在執行同一個 BERT 的 checkpoint 時不會有什麼差
+
+
+
