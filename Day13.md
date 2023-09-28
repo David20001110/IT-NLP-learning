@@ -69,3 +69,15 @@ model = BertModel(bert_config)
 ```
 - BertModel 主要定義BERT模型類，用於建構和訓練BERT模型
 - 創建完成後，就可以使用它來進行各種自然語言處理任務
+
+### 保存模型
+
+跟 tokenizer 的保存方法一樣，使用 save_pretrained() 的方法
+```python
+model.save_pretrained("directory_on_my_computer")
+```
+這時候在資料夾底下就會看到兩個檔案
+```python
+  |__ config.json
+  |__ pytorch_model.bin
+```
