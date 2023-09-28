@@ -78,6 +78,55 @@ model.save_pretrained("directory_on_my_computer")
 ```
 這時候在資料夾底下就會看到兩個檔案
 ```python
-  |__ config.json
-  |__ pytorch_model.bin
+directory_on_my_computer
+    ├── config.json
+    └── pytorch_model.bin
 ```
+- config.json : 這個檔案包含了模型的配置訊息，其中包含了模型的超參數、架構、層數、注意力頭的數量等
+- pytorch_model.bi : 這個檔案包含了預訓練模型的權重和參數。它保存了模型在大規模文字資料上進行預訓練後的學習到的權重資訊。
+
+### 接下來我們直接使用 Tokenizer 的結果來示範完整範例
+
+昨天最後得出的張量
+```python
+{
+    'input_ids': tensor([
+        [101, 2769, 1962, 2682, 6206, 1139, 1343, 4381, 102, 0, 0, 0, 0, 0],
+        [101, 791, 1921, 1921, 3706, 1962, 4229, 8024, 679, 6900, 1394, 1139, 7271, 102]]), 
+    'token_type_ids': tensor([
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]),
+    'attention_mask': tensor([
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
+}
+```
+
+```python
+from transformers import BertModel
+
+checkpoint = 'bert-base-chinese'
+final_input = (上方的張量)
+
+model = BertModle.from_pretrained(checkpoint)
+
+output = model(**final_input)
+```
+- 將輸入資料輸入到模型中，經過模型的各層處理，最後產生模型的輸出。output 變數將包含模型的輸出結果
+- 使用兩個星號**的語法是 Python 的一種特殊方式，它允許將一個字典的鍵值對作為參數傳遞給函數或方法，這種方式的好處是可以透過字典的方式更靈活地傳遞多個參數給函數或方法，而不需要一個一個手動指定參數
+
+看一下模型最后一層的隱藏狀態的形狀
+```python
+print(outputs.last_hidden_state.shape)
+
+# output
+torch.Size([2, 14, 768])
+```
+- 其形狀為[ batch_size, sequence_length, hidden_size ]
+    - batch_size表示輸入資料的批次大小，即一次同時處理的文字樣本數。
+    - sequence_length表示輸入文本序列的長度，即每個文本樣本的詞彙數量。
+    - hidden_size表示BERT模型的隱藏層的大小，通常為768 或1024，取決於所使用的BERT變種。
+
+### 參考資料
+- <https://zhuanlan.zhihu.com/p/564816807>
+- <https://huggingface.co/learn/nlp-course/en/chapter2/3?fw=pt>
