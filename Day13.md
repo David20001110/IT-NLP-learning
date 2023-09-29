@@ -1,4 +1,8 @@
-# Day 12 - 使用 Transformers (3) - Model
+# Day 13 - 使用 Transformers (3) - Model
+
+今天我們要針對三個部份的第二個部分 Model 來做說明
+
+
 
 我們要了解如何建立和使用模型，和 Tokenizer 有點類似的是有 AutoTokenizer 類別，那也有 AutoModel 這個類別，當我們想實例化任何的預訓練模型，我們可以直接使用它，它會根據給定的模型標識自動選擇適合的模型結構，然後用這個結構來建立模型實例。
 
