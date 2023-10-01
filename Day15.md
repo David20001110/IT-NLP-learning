@@ -89,6 +89,6 @@ tensor([[-0.0946,  0.3242]], grad_fn=<AddmmBackward0>)
 ### 參考資料
 - <https://zhuanlan.zhihu.com/p/564816807>
 - <https://huggingface.co/learn/nlp-course/chapter2/5?fw=pt>
-- 
+
 
 
