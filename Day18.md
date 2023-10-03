@@ -1,4 +1,4 @@
-# Day 17 - 使用 Transformers (9) - 總結
+# Day 18 - 使用 Transformers (9) - 總結(get it together)
 
 #### 在前面幾章節我們講了很多，說了 tokenizer 是怎麼工作的、tokenizaion 的過程、轉換 input ID、padding、attention masks、多序列處理等等。
 
@@ -182,6 +182,8 @@ SequenceClassifierOutput(
 4. 最後，我們將處理後的輸入張量傳遞給預訓練的 BERT 模型進行預測
 
 > 這樣的做法讓你能夠輕鬆地使用 Transformers 库來處理文本數據，而不需要手動處理分詞、填充和截斷等步驟。模型的輸入資料將會根據你的設置自動進行處理，並且你可以方便地使用預訓練模型來進行文本分類等任務。
+
+目前 transforemrs 的學習就到這邊先暫時結束啦(‾◡◝)
 
 ### 參考資料
 - <https://huggingface.co/learn/nlp-course/chapter2/6?fw=pt>
