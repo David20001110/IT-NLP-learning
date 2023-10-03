@@ -1,5 +1,5 @@
 
-# Day 17 - 使用 Transformers (7) - 處理多個序列(下半部)
+# Day 17 - 使用 Transformers (8) - 處理多個序列(下半部)
 
 #### 當我們已經知道要怎麼透過 padding 的方法矩形張量，那我們就可以將它傳入模型進行批量處理。
 
@@ -56,6 +56,7 @@ print(output.logits)
 tensor([[0.2902, 0.8102],
         [0.2497, 0.7787]], grad_fn=<AddmmBackward0>)
 ```
+
 - 這樣我們就能得到跟單個序列時一樣的 output
 
 ### Longer sequences (長序列)
@@ -69,3 +70,7 @@ tensor([[0.2902, 0.8102],
     ```
    sequence = sequence[:max_sequence_length]
    ```
+   
+### 參考資料
+- <https://huggingface.co/learn/nlp-course/chapter2/5?fw=pt>
+- <https://zhuanlan.zhihu.com/p/448852278>
