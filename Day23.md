@@ -95,7 +95,7 @@ Dataset({
 data = wikiann_datasets.filter(lambda x: len(x["tokens"]) > 20)
 print(data)
 ```
-- lambda 是一種用來定義簡單的匿名函數的方式，以當下這種情況來說，x 是每一個資料，當 x 這個資料的 'tokens' 的長度大於 20 的情況
+- lambda 是一種用來定義簡單的匿名函數的方式，以當下這種情況來說，x 是每一個資料，當 x 這個資料的 'tokens' 的長度大於 20 的情況 `(對於 lambda 想多了解的人可以再去自己找)`
 
 也可以寫成這樣
 ```python
