@@ -62,6 +62,33 @@ DatasetDict({
 ```
 - 這樣它就會將原本的 20000 筆資料，在拆成 18000 的 `train data`和 2000 的 `test data`
 
+#### 我們可以再把它拆成 `train`、`validation`、`test` 三種資料集
+```python
+data_split_2 = data_split["train"].train_test_split(train_size=0.8, seed=42)
+data_split_2["validation"] = data_split_2.pop("test")
+data_split_2["test"] = data_split["test"]
+print(data_split_2)
+```
+- 首先先針對`train`的部分再拆成 `train`和`test`
+- 將`test`更改為`validation`
+- 最後再將原本的`test`加到新的資料集
+```python
+DatasetDict({
+    train: Dataset({
+        features: ['tokens', 'ner_tags', 'langs', 'spans'],
+        num_rows: 14400
+    })
+    validation: Dataset({
+        features: ['tokens', 'ner_tags', 'langs', 'spans'],
+        num_rows: 3600
+    })
+    test: Dataset({
+        features: ['tokens', 'ner_tags', 'langs', 'spans'],
+        num_rows: 2000
+    })
+})
+```
+
 ### 3. select (選取)
 #### 它的作用是從資料集中選取指定範圍的樣本，並允許我們去控制資料集的大小和內容，以滿足需求。
 

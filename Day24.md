@@ -1,4 +1,4 @@
-# Day 24 - 使用 Datasets 庫 (3) - 清理資料集功能
+# Day 24 - 使用 Datasets 庫 (4) - 清理資料集功能
 
 接著前一天的部分繼續說後半部
 
@@ -85,7 +85,7 @@ DatasetDict({
 
 #### 主要作用是對資料集中的每個樣本應用一個自定義的函數，然後返回一個新的資料集，其中包含了應用了函數處理的樣本。這個方法讓你能夠對資料集進行各種轉換、清理、特徵工程等操作。
 
-#### 1. 全部轉成小寫
+
 ```python
 def lowercase_condition(example):
     return {"condition": example["review"].lower()}
@@ -97,22 +97,73 @@ drug_dataset.map(lowercase_condition)
 ![](C:\Users\User\Pictures\datasets_4.png)
 - 在輸出欄位上會跑出一個 map 的進度條，會發現它的速度有點緩慢
 
-#### 2. 將所有HTML 字元進行轉義
+#### map() 參數 : batched
+map()方法有一個batched參數，如果設定為True , map 函數將會分批執行所需要進行的操作（批次大小是可配置的，但預設為1,000）。例如，先前對 review 進行轉小寫的 map 函數運行需要一些時間`（您可以從進度條中讀取所用時間）`。我們可以透過使用列表推導同時處理多個元素來加快速度，作法也很簡單。
 
 ```python
-import html
-
-text = "I&#039;m a transformer called BERT"
-html.unescape(text)
-# output: I'm a transformer called BERT
-```
-- 這是 html 模組中的 unescape 函數，這個函數會將 HTML 實體轉換回原始的字元。
-```python
-drug_dataset = drug_dataset.map(
-    lambda x: {"review": html.unescape(x["review"])}
-)
-
 new_drug_dataset = drug_dataset.map(
-    lambda x: {"review": [html.unescape(o) for o in x["review"]]}, batched=True
+    lambda x: {"review": [o.lower() for o in x["review"]]}, batched=True
 )
 ```
+- 將 `x['review].lower()`，轉成 `[o.lower() for o in x["review"]]`，這是因為當我們將 batched 設為 True 時，map 處理的方式就會是批次處理也就是打包成 List，因此我們需要將處理的方式做一個轉換。
+- 這時候去執行時會發現`速度上快很多`
+
+#### 我們可以透過 在最前方加上 %time 去計算當前這行 code 花了多少時間，(記得在執行的時候要讓整個 map 都在同一行)
+```python
+%time new_drug_dataset = drug_dataset.map( lambda x: {"review": x["review"]} )
+# Wall time: 25.3 s
+
+%time new_drug_dataset = drug_dataset.map( lambda x: {"review": [o.lower() for o in x["review"]]}, batched=True )
+# Wall time: 1.61 s
+```
+- 可以看到時間上的差距
+
+#### map() 參數 : num_proc
+它用於控制在 map 在運行期間同時處理多少個元素。每個進程都可以處理一個元素，因此 num_proc 指定了同時處理多少個元素的並行數，`(指定並行處理（parallel processing）的進程數量)`。
+
+```python
+%time new_drug_dataset = drug_dataset.map( lambda x: {"review": [o.lower() for o in x["review"]]}, batched=True, num_proc=8)
+# Wall time: 3.66 s
+
+%time new_drug_dataset = drug_dataset.map( lambda x: {"review": [o.lower() for o in x["review"]]}, batched=True, num_proc=4)
+# Wall time: 3.49 s
+
+%time new_drug_dataset = drug_dataset.map( lambda x: {"review": [o.lower() for o in x["review"]]}, batched=True, num_proc=2)
+# Wall time: 2.14 s
+```
+
+> 使用 num_proc 以加快處理速度通常是一個好主意，只要您使用的函數還沒有自己帶有的進行某種多進程處理的方法，但並非情況都是如此，像上面測試的三組都沒有原本單純加上 `batched=True` 來的快
+
+### 8. flatten (平坦)
+#### 用於將資料集的嵌套結構展平，將嵌套的多維資料轉換為一個扁平的資料集，`(把它放在最後是因為在原本資料集中沒有可以實作 flatten 的地方)`
+
+```python
+from datasets import load_dataset
+
+squad = load_dataset('squad', split='train')
+print(squad)
+```
+- 先載入資料集`(斯坦福問答資料集（Stanford Question Answering Dataset）)`
+```python
+Dataset({
+    features: ['id', 'title', 'context', 'question', 'answers'],
+    num_rows: 87599
+})
+```
+在上述所有 columns 中的 answers 這個 column 它其實還可以再拆分成 `text`和`answer_start`
+
+```python
+squad.flatten()
+```
+```python
+Dataset({
+    features: ['id', 'title', 'context', 'question', 'answers.text', 'answers.answer_start'],
+    num_rows: 87599
+})
+```
+
+### 參考資料
+- <https://huggingface.co/learn/nlp-course/chapter5/3?fw=pt>
+
+
+
