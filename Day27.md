@@ -31,6 +31,7 @@ args = TrainingArguments(
     no_cuda=False,
 )
 ```
+- `output_dir`會設置訓練完後模型存放的位置
 - `evaluation_strategy`和`save_strategy`設置為`steps`，以步驟為單位去評估模型和保存模型的檢查點
 - `eval_steps`和`save_steps`設置為`500`，每 500 步會去評估和保存模型
 - `learning_rate`是學習率，
@@ -121,8 +122,7 @@ trainer = Trainer(
 ```
 - `Trainer`是一個高級的訓練和評估工具，它簡化了很多流程，我們只需要傳入在訓練時我們所需要給的參數就好，包含定義好的模型、訓練參數、訓練資料等等。
 
-#### 8. 訓練模型
-
+#### 8. 訓練模型 (微調)
 
 ```python
 trainer.train()
