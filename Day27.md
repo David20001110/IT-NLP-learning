@@ -128,5 +128,6 @@ trainer = Trainer(
 trainer.train()
 ```
 - 直接使用創建好的 Trainer 對向執行 train 方法就可以開始訓練
- ![](C:\Users\User\Pictures\ner_.png)
 
+ ![img_3.png](img_3.png)
+- 訓練時會像這樣照著我們設定的`eval_steps=500`每500步做評估
